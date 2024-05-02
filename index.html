@@ -119,7 +119,7 @@
       cursor: pointer;
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="file"] {
       padding: 5px;
       font-size: 12px;
       margin-right: 10px;
@@ -231,6 +231,7 @@
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
+        fileInput.capture = 'environment'; // Tillad brug af kamera
         fileInput.onchange = e => handleImageChange(e, madItem, madElement);
         fileInput.click();
       };
@@ -303,14 +304,23 @@
     }
 
     function handleImageChange(event, madItem, madElement) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        madItem.img = e.target.result;
-        saveChanges();
-        updateAllMadElementsImage(madItem);
-      };
-      reader.readAsDataURL(file);
+      if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            madItem.img = e.target.result;
+            saveChanges();
+            updateAllMadElementsImage(madItem);
+          };
+          reader.onerror = function(e) {
+            console.error("Failed to read file:", e);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          showError("Kun billedfiler er tilladt.");
+        }
+      }
     }
 
     function updateAllMadElementsImage(madItem) {
@@ -365,3 +375,4 @@
 </script>
 </body>
 </html>
+
