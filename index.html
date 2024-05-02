@@ -178,7 +178,7 @@
       viewBtn.classList.add('hidden');
       addBtn.classList.add('hidden');
       backButton.classList.remove('hidden');
-      updateButtonVisibility(false); // Skjul rediger/slet/tilføj billede knapper
+      updateButtonVisibility(false);
     });
 
     addBtn.addEventListener('click', function() {
@@ -187,7 +187,7 @@
       viewBtn.classList.add('hidden');
       addBtn.classList.add('hidden');
       backButton.classList.remove('hidden');
-      updateButtonVisibility(true); // Vis rediger/slet/tilføj billede knapper
+      updateButtonVisibility(true);
     });
 
     addNameBtn.addEventListener('click', function() {
@@ -284,9 +284,11 @@
     }
 
     function saveMadItem(madItem) {
-      const mads = JSON.parse(localStorage.getItem('madListe')) || [];
-      mads.push(madItem);
-      localStorage.setItem('madListe', JSON.stringify(mads));
+      let mads = JSON.parse(localStorage.getItem('madListe')) || [];
+      if (!mads.some(item => item.navn === madItem.navn)) {
+        mads.push(madItem);
+        localStorage.setItem('madListe', JSON.stringify(mads));
+      }
     }
 
     function saveChanges() {
@@ -305,6 +307,7 @@
       const reader = new FileReader();
       reader.onload = function(e) {
         madItem.img = e.target.result;
+        saveChanges();
         updateAllMadElementsImage(madItem);
       };
       reader.readAsDataURL(file);
