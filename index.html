@@ -32,7 +32,7 @@
     }
 
     button {
-      padding: 10px 20px;
+      padding: 40px 60px;
       font-size: 16px;
       color: white;
       background-color: limegreen;
@@ -220,7 +220,7 @@
       controls.className = 'mad-controls';
 
       const reserveBtn = document.createElement('button');
-      reserveBtn.textContent = 'Reserver';
+      reserveBtn.textContent = 'Reserver mad';
       reserveBtn.className = 'small-button';
       reserveBtn.onclick = () => reserveItem(madItem, madElement);
 
@@ -236,7 +236,7 @@
       };
 
       const editBtn = document.createElement('button');
-      editBtn.textContent = 'Rediger navn';
+      editBtn.textContent = 'Rediger mad';
       editBtn.className = 'small-button edit-btn';
       editBtn.onclick = () => {
         const newNavn = prompt("Rediger navn på mad:", madItem.navn);
