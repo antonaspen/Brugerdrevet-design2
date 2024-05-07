@@ -12,8 +12,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      min-height: 100vh;
       color: #333;
     }
 
@@ -53,13 +53,9 @@
       margin-top: 20px;
     }
 
-    .mad-list-container {
-      width: 100%;
-      height: 300px; /* Juster højden efter behov */
-      overflow-y: scroll; /* Tillader vertikal scrolling */
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 5px;
+    #madListeContainer {
+      max-height: 50vh;
+      overflow-y: auto;
     }
 
     .mad-item {
@@ -114,10 +110,13 @@
   <h2>Tilføj mad til listen</h2>
   <input type="text" id="nytNavnInput" placeholder="Indtast navn på mad" />
   <button id="addNameBtn" class="small-button">Tilføj Mad</button>
-  <div class="mad-list-container">
-    <div id="madListeAdd"></div>
-  </div>
 </div>
+
+<div id="madListeContainer" class="section">
+  <h2>Mad Liste</h2>
+  <div id="madListeAdd"></div>
+</div>
+
 <div id="errorMessage" class="hidden"></div>
 
 <script>
@@ -264,21 +263,26 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
-      fileInput.capture = 'environment'; // Åbner kameraet automatisk
+      fileInput.capture = 'environment'; // Brug kameraet som standard
+
+      // Når fil vælges eller et foto tages
       fileInput.onchange = e => {
-        const file = e.target.files[0];
-        if (file.type.startsWith('image/')) {
+        const file = e.target.files[0]; // Vælg første fil fra input
+        if (file && file.type.startsWith('image/')) {
+          // Brug FileReader til at konvertere billedet til base64
           const reader = new FileReader();
           reader.onload = function(e) {
-            madItem.img = e.target.result;
-            saveMadItem(madItem);
-            loadMadListe(madListeAdd); // Indlæser listen igen for at opdatere visningen
+            madItem.img = e.target.result; // Gem base64-encoded billede
+            saveMadItem(madItem); // Opdater `localStorage` med billedet
+            loadMadListe(madListeAdd); // Opdater listevisning
           };
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(file); // Læs fil som Data URL
         } else {
           showError("Kun billedfiler er tilladt.");
         }
       };
+
+      // Åbn input-dialogen
       fileInput.click();
     }
 
