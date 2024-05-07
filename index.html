@@ -55,8 +55,8 @@
 
     .mad-list-container {
       width: 100%;
-      height: 300px; /* Juster højden efter behov */
-      overflow-y: scroll; /* Tillader vertikal scrolling */
+      height: 300px;
+      overflow-y: scroll;
       border: 1px solid #ccc;
       border-radius: 5px;
       padding: 5px;
@@ -128,7 +128,7 @@
     const madListeAdd = document.getElementById('madListeAdd');
 
     // Indlæser listen ved første kørsel
-    loadMadListe(madListeAdd);
+    loadMadListe();
 
     // Tilføj mad ved klik på 'Tilføj Mad'
     addNameBtn.addEventListener('click', function() {
@@ -136,17 +136,17 @@
         const madItem = { navn: navnInput.value.trim(), img: null, reservedBy: null };
         saveMadItem(madItem);
         navnInput.value = '';
-        loadMadListe(madListeAdd);
+        loadMadListe();
       } else {
         showError("Navnet på maden kan ikke være tomt.");
       }
     });
 
     // Indlæser listen over mad-elementer
-    function loadMadListe(targetElement) {
+    function loadMadListe() {
       const mads = JSON.parse(localStorage.getItem('madListe')) || [];
-      targetElement.innerHTML = '';
-      mads.forEach(madItem => targetElement.appendChild(createMadElement(madItem)));
+      madListeAdd.innerHTML = '';
+      mads.forEach(madItem => madListeAdd.appendChild(createMadElement(madItem)));
     }
 
     // Opretter et mad-element på listen
@@ -264,17 +264,14 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
-      fileInput.capture = 'environment'; // Åbner kameraet automatisk
+      fileInput.capture = 'environment';
       fileInput.onchange = e => {
         const file = e.target.files[0];
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            madItem.img = e.target.result;
-            saveMadItem(madItem);
-            loadMadListe(madListeAdd); // Indlæser listen igen for at opdatere visningen
-          };
-          reader.readAsDataURL(file);
+        if (file && file.type.startsWith('image/')) {
+          const imageUrl = URL.createObjectURL(file);
+          madItem.img = imageUrl;
+          saveMadItem(madItem);
+          loadMadListe();
         } else {
           showError("Kun billedfiler er tilladt.");
         }
@@ -282,17 +279,14 @@
       fileInput.click();
     }
 
-    // Skalerer billedet, når man klikker på det
-    function toggleEnlarge(img) {
-      img.classList.toggle('enlarged');
-      img.style.transform = img.classList.contains('enlarged') ? 'scale(2)' : '';
-    }
-
-    // Viser fejlmeddelelser på skærmen
+    // Vis fejlbeskeder
     function showError(message) {
       errorMessage.textContent = message;
-      errorMessage.classList.remove('hidden');
-      setTimeout(() => errorMessage.classList.add('hidden'), 3000);
+    }
+
+    // Skaler billedet op eller ned
+    function toggleEnlarge(imgElement) {
+      imgElement.style.transform = imgElement.style.transform ? '' : 'scale(2)';
     }
   });
 </script>
