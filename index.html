@@ -17,7 +17,16 @@
       color: #333;
     }
 
-    h1, h2 {
+    h1 {
+      color: #333366;
+      margin-bottom: 1rem;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: limegreen;
+      color: white;
+    }
+
+    h2 {
       color: #333366;
       margin-bottom: 1rem;
     }
@@ -268,10 +277,13 @@
       fileInput.onchange = e => {
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
-          const imageUrl = URL.createObjectURL(file);
-          madItem.img = imageUrl;
-          saveMadItem(madItem);
-          loadMadListe();
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            madItem.img = event.target.result;
+            saveMadItem(madItem);
+            loadMadListe();
+          };
+          reader.readAsDataURL(file);
         } else {
           showError("Kun billedfiler er tilladt.");
         }
