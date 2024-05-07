@@ -273,32 +273,31 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
-      fileInput.capture = 'environment';
-      fileInput.onchange = e => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
+      fileInput.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
           const reader = new FileReader();
-          reader.onload = function(event) {
-            madItem.img = event.target.result;
+          reader.onload = (e) => {
+            madItem.img = e.target.result;
             saveMadItem(madItem);
             loadMadListe();
           };
           reader.readAsDataURL(file);
-        } else {
-          showError("Kun billedfiler er tilladt.");
         }
       };
       fileInput.click();
     }
 
-    // Vis fejlbeskeder
+    // Viser fejlmeddelelser på skærmen
     function showError(message) {
       errorMessage.textContent = message;
+      errorMessage.classList.remove('hidden');
+      setTimeout(() => errorMessage.classList.add('hidden'), 3000);
     }
 
-    // Skaler billedet op eller ned
-    function toggleEnlarge(imgElement) {
-      imgElement.style.transform = imgElement.style.transform ? '' : 'scale(2)';
+    // Forstørrer eller formindsker et billede ved klik
+    function toggleEnlarge(img) {
+      img.classList.toggle('enlarged');
     }
   });
 </script>
