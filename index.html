@@ -253,9 +253,10 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
+      fileInput.capture = 'environment';  // Åbner kameraet
       fileInput.onchange = e => {
         const file = e.target.files[0];
-        if (file.type.startsWith('image/')) {
+        if (file && file.type.startswith('image/')) {
           const reader = new FileReader();
           reader.onload = function(e) {
             madItem.img = e.target.result;
@@ -286,3 +287,4 @@
 </script>
 </body>
 </html>
+
