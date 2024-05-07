@@ -53,6 +53,15 @@
       margin-top: 20px;
     }
 
+    .mad-list-container {
+      width: 100%;
+      height: 300px; /* Juster højden efter behov */
+      overflow-y: scroll; /* Tillader vertikal scrolling */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 5px;
+    }
+
     .mad-item {
       margin-bottom: 10px;
       display: flex;
@@ -105,7 +114,9 @@
   <h2>Tilføj mad til listen</h2>
   <input type="text" id="nytNavnInput" placeholder="Indtast navn på mad" />
   <button id="addNameBtn" class="small-button">Tilføj Mad</button>
-  <div id="madListeAdd"></div>
+  <div class="mad-list-container">
+    <div id="madListeAdd"></div>
+  </div>
 </div>
 <div id="errorMessage" class="hidden"></div>
 
@@ -253,10 +264,10 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'image/*';
-      fileInput.capture = 'environment';  // Åbner kameraet
+      fileInput.capture = 'environment'; // Åbner kameraet automatisk
       fileInput.onchange = e => {
         const file = e.target.files[0];
-        if (file && file.type.startswith('image/')) {
+        if (file.type.startsWith('image/')) {
           const reader = new FileReader();
           reader.onload = function(e) {
             madItem.img = e.target.result;
@@ -287,4 +298,3 @@
 </script>
 </body>
 </html>
-
